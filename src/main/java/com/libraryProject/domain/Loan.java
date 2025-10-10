@@ -2,7 +2,7 @@ package com.libraryProject.domain;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.data.annotation.Id;
+import jakarta.persistence.Id;
 import com.libraryProject.domain.enums.LoanStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -38,12 +38,12 @@ public class Loan {
 	private LoanStatus status;
 	
 	// um user tem vários loans
-	@ManyToOne
+	@ManyToOne(optional = false)
 	@JoinColumn(name="user_id") // na tabela Loan, o User é FK - user_id: nome da FK. JPA pega a PK da tabela users
 	private User user; 
 	
 	// um book já teve vários loans
-	@ManyToOne 
+	@ManyToOne (optional = false)
 	@JoinColumn(name="book_id") 
 	private Book book;
 	

@@ -2,7 +2,7 @@ package com.libraryProject.domain;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.springframework.data.annotation.Id;
+import jakarta.persistence.Id;  // ✅ CORRETO para JPA!
 import com.libraryProject.domain.enums.UserRole;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,7 +19,11 @@ import lombok.Setter;
 @Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+
 //@Table(name = "nome_tb") se quiser mudar nome da tabela no banco
+
+// -------- ** depois pensar em valores padrão para os atributos das entidades
+
 @Entity(name = "users") // nome usado no JPQL
 public class User {
 	
@@ -36,7 +40,7 @@ public class User {
 	@Column(name = "password", nullable = false, length = 75)
 	private String password;
 	
-	@Column(name = "role")
+	@Column(name = "role", nullable = false)
 	@Enumerated(EnumType.STRING)
 	private UserRole role;
 	

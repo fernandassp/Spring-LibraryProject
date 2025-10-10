@@ -1,7 +1,7 @@
 package com.libraryProject.domain;
 
 import java.time.LocalDateTime;
-import org.springframework.data.annotation.Id;
+import jakarta.persistence.Id; 
 import com.libraryProject.domain.enums.LoanStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
