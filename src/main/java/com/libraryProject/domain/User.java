@@ -12,7 +12,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;  // ✅ CORRETO para JPA!
+import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,11 +22,6 @@ import lombok.Setter;
 @Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-
-//@Table(name = "nome_tb") se quiser mudar nome da tabela no banco
-
-// -------- ** depois pensar em valores padrão para os atributos das entidades
-
 @Entity(name = "users") // nome usado no JPQL
 public class User implements Serializable{
 	
@@ -39,16 +34,16 @@ public class User implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column (name = "name", nullable = false)  // n precisa do name mas só pra treinar
+	@Column (nullable = false)  
 	private String name;
 	
-	@Column (name = "email", nullable = false, unique = true)
+	@Column (nullable = false, unique = true)
 	private String email;
 	
-	@Column(name = "password", nullable = false, length = 75)
+	@Column(nullable = false, length = 75)
 	private String password;
 	
-	@Column(name = "role", nullable = false)
+	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private UserRole role;
 	
@@ -56,4 +51,10 @@ public class User implements Serializable{
 	// um user tem uma lista de empréstimos
 	@OneToMany(mappedBy = "user") // NOME DO ATRIBUTO USER NA CLASSE LOAN
 	private List<Loan> loans = new ArrayList<>();
+	
+	
+	
+	//@Table(name = "nome_tb") se quiser mudar nome da tabela no banco
+
+	// -------- ** depois pensar em valores padrão para os atributos das entidades
 }
