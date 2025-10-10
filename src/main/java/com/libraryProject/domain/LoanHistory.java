@@ -1,5 +1,6 @@
 package com.libraryProject.domain;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import jakarta.persistence.Id; 
 import com.libraryProject.domain.enums.LoanStatus;
@@ -19,7 +20,12 @@ import lombok.Setter;
 @Getter @Setter 
 @AllArgsConstructor @NoArgsConstructor
 @Entity(name = "loanHistory")
-public class LoanHistory {
+public class LoanHistory implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,7 +41,7 @@ public class LoanHistory {
 	@Enumerated(EnumType.STRING)
 	private LoanStatus status;
 	
-	@ManyToOne
+	@ManyToOne(optional = false)
 	@JoinColumn(name = "loan_id")
 	private Loan loan;
 }

@@ -1,15 +1,18 @@
 package com.libraryProject.domain;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import jakarta.persistence.Id;  // ✅ CORRETO para JPA!
+
 import com.libraryProject.domain.enums.UserRole;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;  // ✅ CORRETO para JPA!
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,8 +28,13 @@ import lombok.Setter;
 // -------- ** depois pensar em valores padrão para os atributos das entidades
 
 @Entity(name = "users") // nome usado no JPQL
-public class User {
+public class User implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
