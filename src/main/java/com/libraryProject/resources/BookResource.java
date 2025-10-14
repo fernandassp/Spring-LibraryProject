@@ -35,7 +35,7 @@ public class BookResource {
 		Book updatedBook = bookService.update(book);
 		return ResponseEntity.ok(updatedBook);
 	}
-	
+	// *** obs.: o metodo update exige que informe o available no body; dá para mudar isso?
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<Book> getById(@PathVariable(name="id") Long id){
@@ -52,11 +52,8 @@ public class BookResource {
 	
 	@PatchMapping("/{id}/available")
 	public ResponseEntity<Book> updateAvailability(@PathVariable(name="id")Long id, @RequestBody Boolean available){
-		Book book = new Book();  // pode fazer assim? ou é melhor: Book updatedBook = bookService.updateAvailability(id, available);
-		book.setId(id);
-		book.setAvailable(available);
-		bookService.updateAvailability(book);
-		return ResponseEntity.ok().build();
+		Book updatedBook = bookService.updateAvailability(id, available);
+		return ResponseEntity.ok(updatedBook);
 	}
 	
 	@GetMapping("/available")

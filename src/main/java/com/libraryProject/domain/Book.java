@@ -3,6 +3,9 @@ package com.libraryProject.domain;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Id;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -42,6 +45,7 @@ public class Book implements Serializable{
 	
 	// um livro é emprestado várias vezes - vários loans
 	@OneToMany(mappedBy = "book")
+	@Getter(onMethod = @__({@JsonIgnore}))
 	private List<Loan> loans = new ArrayList<>();
 	
 	

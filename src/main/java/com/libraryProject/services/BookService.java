@@ -32,8 +32,11 @@ public class BookService {
 		return bookRepository.findAll();
 	}
 	
-	public int updateAvailability(Book book) {
-		return bookRepository.updateAvailability(book.getAvailable(), book.getId()); // setar o av primeiro
+	public Book updateAvailability(Long bookId, Boolean available) {
+	    // busca o livro existente para preservar outros dados
+	    Book book = getById(bookId);
+	    book.setAvailable(available);
+	    return bookRepository.save(book);
 	}
 	
 	public List<Book> listAllAvailable(){

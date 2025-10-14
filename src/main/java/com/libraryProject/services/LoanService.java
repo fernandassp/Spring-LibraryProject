@@ -52,8 +52,7 @@ public class LoanService {
 		Loan updatedLoan = update(loan);
 		
 		Book book = loan.getBook();
-		book.setAvailable(false);
-		bookService.updateAvailability(book);
+		bookService.updateAvailability(book.getId(), false);
 		
 		createNewLoanHistory(updatedLoan, LoanStatus.APPROVED, "Empréstimo aprovado pela biblioteca");
 		return updatedLoan;
@@ -79,8 +78,7 @@ public class LoanService {
 		createNewLoanHistory(updatedLoan, LoanStatus.RETURNED, "Livro devolvido pelo usuário " + loan.getUser().getName());
 		
 		Book book = loan.getBook();
-		book.setAvailable(true);
-		bookService.updateAvailability(book); // liberar livro
+		bookService.updateAvailability(book.getId(), true); // liberar livro
 		
 		return updatedLoan;
 	}
