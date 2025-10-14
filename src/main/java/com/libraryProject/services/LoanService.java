@@ -22,29 +22,6 @@ public class LoanService {
 	@Autowired BookService bookService;
 	@Autowired UserService userService;
 
-	/*
-	 * Aprovar empréstimo (status: APPROVED) - apenas LIBRARIAN/ADMIN (update) 
-	 * Registrar retirada (status: IN_PROGRESS) (update) 
-	 * Registrar devolução (status: RETURNED) (update)
-	 */
-
-	// versão 1
-	public Loan requestLoan(Loan loan) {
-
-		// validações
-
-		loan.setStatus(LoanStatus.REQUESTED);
-		loan.setLoanDate(LocalDateTime.now());
-		loan.setReturnDate(LocalDateTime.now().plusDays(15));
-
-		Loan savedLoan = loanRepository.save(loan);
-
-		createInitialLoanHistory(savedLoan);
-
-		return savedLoan;
-	}
-
-	// versão 2
 	public Loan requestLoan(Long userId, Long bookId) {
 
 		User user = userService.getById(userId);
@@ -62,9 +39,6 @@ public class LoanService {
 		Loan savedLoan = loanRepository.save(loan);
 		createInitialLoanHistory(savedLoan);
 
-		book.setAvailable(false);
-		bookService.updateAvailability(book);
-
 		return savedLoan;
 	}
 	
@@ -72,12 +46,42 @@ public class LoanService {
 		
 		// validações: apenas LIBRARIAN/ADMIN (user role) || loan tem que ser requested
 		
-		Loan loan = getById(loanId); // validar se achou
+		Loan loan = getById(loanId);
 		
 		loan.setStatus(LoanStatus.APPROVED);
-		Loan updatedLoan = loanRepository.save(loan);
-		 
+		Loan updatedLoan = update(loan);
+		
+		Book book = loan.getBook();
+		book.setAvailable(false);
+		bookService.updateAvailability(book);
+		
 		createNewLoanHistory(updatedLoan, LoanStatus.APPROVED, "Empréstimo aprovado pela biblioteca");
+		return updatedLoan;
+	}
+	
+	public Loan registerWithdrawal(Long loanId) { // retirada do livro
+		// validações: apenas LIBRARIAN/ADMIN (user role) || loan tem que ser approved
+		Loan loan = getById(loanId);
+		
+		loan.setStatus(LoanStatus.IN_PROGRESS);
+		Loan updatedLoan = update(loan);
+		 
+		createNewLoanHistory(updatedLoan, LoanStatus.IN_PROGRESS, "Livro retirado pelo usuário " + loan.getUser().getName());
+		return updatedLoan;
+	}
+	
+	public Loan registerBookReturn(Long loanId) {
+		// validações: apenas LIBRARIAN/ADMIN (user role) || loan tem que ser in progress
+		Loan loan = getById(loanId);
+		loan.setStatus(LoanStatus.RETURNED);
+		Loan updatedLoan = update(loan);
+		
+		createNewLoanHistory(updatedLoan, LoanStatus.RETURNED, "Livro devolvido pelo usuário " + loan.getUser().getName());
+		
+		Book book = loan.getBook();
+		book.setAvailable(true);
+		bookService.updateAvailability(book); // liberar livro
+		
 		return updatedLoan;
 	}
 
