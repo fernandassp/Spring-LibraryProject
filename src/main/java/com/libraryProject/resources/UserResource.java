@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.libraryProject.domain.User;
+import com.libraryProject.domain.enums.UserRole;
 import com.libraryProject.dto.UserLogindto;
 import com.libraryProject.services.UserService;
 
@@ -41,7 +43,7 @@ public class UserResource {
 	public ResponseEntity<User> getById(@PathVariable(name = "id") Long id){
 		User user = userService.getById(id);
 		return ResponseEntity.ok(user);
-	}
+	} 
 	
 	@GetMapping
 	public ResponseEntity<List<User>> listAll(){
@@ -54,4 +56,21 @@ public class UserResource {
 		User loggedUser = userService.login(userDto.getEmail(), userDto.getPassword());
 		return ResponseEntity.ok(loggedUser);
 	}
+	
+	@PatchMapping("/{id}/role")
+	public ResponseEntity<User> updateRole(@PathVariable(name="id") Long id, @RequestBody UserRole role){
+		User user = new User();
+		user.setId(id);
+		user.setRole(role);
+		userService.updateRole(user);
+		return ResponseEntity.ok().build();
+	}
+	
+	@GetMapping("/role/{role}")
+	public ResponseEntity<List<User>> getByRole(@PathVariable UserRole role){
+		List<User> users = userService.findByRole(role);
+		return ResponseEntity.ok(users);
+	}
+	
+	
 }
