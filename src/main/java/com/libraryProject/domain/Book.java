@@ -9,13 +9,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.OneToMany;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter @Setter
-@AllArgsConstructor @NoArgsConstructor
+@NoArgsConstructor
 @Entity(name="books")
 public class Book implements Serializable{
 	
@@ -44,4 +43,19 @@ public class Book implements Serializable{
 	// um livro é emprestado várias vezes - vários loans
 	@OneToMany(mappedBy = "book")
 	private List<Loan> loans = new ArrayList<>();
+	
+	
+	public Book(Long id, String title, String author, String isbn, Boolean available, List<Loan> loans) {
+		this.id = id;
+		this.title = title;
+		this.author = author;
+		this.isbn = isbn;
+		this.available = available;
+		this.loans = (loans != null) ? loans : new ArrayList<>(); // não dar erro para adicionar novo loan
+	}
+
+	public void addLoan(Loan loan) {
+		loan.setBook(this);
+		this.loans.add(loan);
+	}
 }

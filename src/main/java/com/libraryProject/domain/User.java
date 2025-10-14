@@ -53,6 +53,10 @@ public class User implements Serializable{
 	private List<Loan> loans = new ArrayList<>();
 	
 	
+	public void addLoan(Loan loan) {
+		this.loans.add(loan);
+		loan.setUser(this);
+	}
 	
 	//@Table(name = "nome_tb") se quiser mudar nome da tabela no banco
 

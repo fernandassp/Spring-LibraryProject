@@ -64,4 +64,8 @@ public class UserService {
     public List<User> findByRole(UserRole role) {
         return userRepository.findAllByRole(role);
     }
+    
+    public int updateRole(User user) {
+    	return userRepository.updateRole(user.getId(), user.getRole()); // setar o role primeiro
+    }
 }

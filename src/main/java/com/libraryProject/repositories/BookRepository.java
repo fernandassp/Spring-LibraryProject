@@ -15,10 +15,6 @@ import com.libraryProject.domain.Book;
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long> {
 
-	/*
-	Cadastrar livro - save
-	*/
-	
 	public Optional<Book> findByTitle(String title);
 	
 	public List<Book> findByAuthor(String author);

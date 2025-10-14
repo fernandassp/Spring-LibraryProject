@@ -1,4 +1,5 @@
 package com.libraryProject.domain;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -18,10 +19,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter @Setter
+@Getter
+@Setter
 @NoArgsConstructor
-@Entity(name="loans")
-public class Loan implements Serializable{
+@Entity(name = "loans")
+public class Loan implements Serializable {
 
 	/**
 	 * 
@@ -31,47 +33,44 @@ public class Loan implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
-	@Column(nullable = false, updatable = false)	
+
+	@Column(nullable = false, updatable = false)
 	private LocalDateTime loanDate; // se der algum problema, mudo para date
-	
+
 	@Column(nullable = false, updatable = false)
 	private LocalDateTime returnDate;
-	
+
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private LoanStatus status;
-	
+
 	// um user tem vários loans
 	@ManyToOne(optional = false)
-	@JoinColumn(name="user_id") // na tabela Loan, o User é FK - user_id: nome da FK. JPA pega a PK da tabela users
-	private User user; 
-	
+	@JoinColumn(name = "user_id") // na tabela Loan, o User é FK - user_id: nome da FK. JPA pega a PK da tabela
+									// users
+	private User user;
+
 	// um book já teve vários loans
-	@ManyToOne (optional = false)
-	@JoinColumn(name="book_id") 
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "book_id")
 	private Book book;
-	
-	
+
 	// um empréstimo tem uma lista de históricos / estágios do loan
 	@OneToMany(mappedBy = "loan")
 	private List<LoanHistory> history = new ArrayList<>();
-	
-	
-	public Loan(Long id, LocalDateTime loanDate, LocalDateTime returnDate, 
-            LoanStatus status, User user, Book book, List<LoanHistory> history) {
-    this.id = id;
-    this.loanDate = loanDate;
-    this.returnDate = returnDate;
-    this.status = status;
-    this.user = user;
-    this.book = book;
-    this.history = (history != null) ? history : new ArrayList<>(); // não dar erro para adicionar novo historyItem
+
+	public Loan(Long id, LocalDateTime loanDate, LocalDateTime returnDate, LoanStatus status, User user, Book book) {
+		this.id = id;
+		this.loanDate = loanDate;
+		this.returnDate = returnDate;
+		this.status = status;
+		this.user = user;
+		this.book = book;
+		// this.history = (history != null) ? history : new ArrayList<>(); // não dar erro para adicionar novo historyItem
+	}
+
+	public void addHistory(LoanHistory historyItem) {
+		historyItem.setLoan(this);
+		this.history.add(historyItem);
+	}
 }
-	
-	 public void addHistory(LoanHistory historyItem) {
-	        historyItem.setLoan(this);
-	        this.history.add(historyItem);
-	    }
-}
- 

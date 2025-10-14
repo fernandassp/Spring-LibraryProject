@@ -36,7 +36,7 @@ public class LoanRepositoryTests {
 	   bookRepository.save(book);
 	   User user = userRepository.findById(3L).get();
 	   Loan loan = new Loan(null, LocalDateTime.now(), LocalDateTime.now().plusDays(15), LoanStatus.REQUESTED, 
-			   user, book, null);
+			   user, book);
 	   
 	   Loan savedLoan = loanRepository.save(loan);
 	   
