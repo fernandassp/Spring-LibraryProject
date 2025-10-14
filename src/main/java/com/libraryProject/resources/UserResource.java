@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.libraryProject.domain.User;
 import com.libraryProject.domain.enums.UserRole;
 import com.libraryProject.dto.UserLogindto;
+import com.libraryProject.dto.UserUpdateRoledto;
 import com.libraryProject.services.UserService;
 
 @RestController
@@ -58,10 +59,10 @@ public class UserResource {
 	}
 	
 	@PatchMapping("/{id}/role")
-	public ResponseEntity<User> updateRole(@PathVariable(name="id") Long id, @RequestBody UserRole role){
+	public ResponseEntity<User> updateRole(@PathVariable(name="id") Long id, @RequestBody UserUpdateRoledto role){
 		User user = new User();
 		user.setId(id);
-		user.setRole(role);
+		user.setRole(role.getRole());
 		userService.updateRole(user);
 		return ResponseEntity.ok().build();
 	}

@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.libraryProject.domain.enums.UserRole;
 
 import jakarta.persistence.Column;
@@ -40,7 +42,10 @@ public class User implements Serializable{
 	@Column (nullable = false, unique = true)
 	private String email;
 	
+	
 	@Column(nullable = false, length = 75)
+	@Getter(onMethod = @__({@JsonIgnore}))
+	@Setter(onMethod = @__({@JsonProperty}))
 	private String password;
 	
 	@Column(nullable = false)
@@ -50,6 +55,7 @@ public class User implements Serializable{
 	
 	// um user tem uma lista de empréstimos
 	@OneToMany(mappedBy = "user") // NOME DO ATRIBUTO USER NA CLASSE LOAN
+	@Getter(onMethod = @__({@JsonIgnore}))
 	private List<Loan> loans = new ArrayList<>();
 	
 	
