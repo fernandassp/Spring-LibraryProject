@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.libraryProject.domain.Loan;
 import com.libraryProject.domain.enums.LoanStatus;
+import com.libraryProject.dto.LoanRequestdto;
 import com.libraryProject.services.LoanService;
 
 @RestController
@@ -23,9 +24,9 @@ public class LoanResource {
 	@Autowired LoanService loanService;
 
 	@PostMapping
-	public ResponseEntity<Loan> request(@RequestBody Long userId, @RequestBody Long bookId) // mudar para um dto LoanRequest
+	public ResponseEntity<Loan> request(@RequestBody LoanRequestdto loan) 
 	{
-		Loan createdLoan = loanService.requestLoan(userId, bookId);
+		Loan createdLoan = loanService.requestLoan(loan.getUserId(), loan.getBookId());
 		return ResponseEntity.status(HttpStatus.CREATED).body(createdLoan);
 	}
 
