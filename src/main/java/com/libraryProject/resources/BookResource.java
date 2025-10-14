@@ -66,5 +66,6 @@ public class BookResource {
 	}
 	
 	//get by author, get by title... 
+	// listar todos empréstimos de um livro?
 } 
  

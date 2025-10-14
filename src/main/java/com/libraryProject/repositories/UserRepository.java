@@ -14,12 +14,6 @@ import com.libraryProject.domain.enums.UserRole;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 	
-	/*
-	 Cadastrar usuário (com hash de senha): user service - aqui tem o método save
-
-	 */
-	
-
 	@Query("SELECT u from users u where u.email = :email and u.password = :password")
 	public Optional<User> login(@Param("email") String email, @Param("password")String password);
 	

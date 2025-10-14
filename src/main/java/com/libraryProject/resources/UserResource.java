@@ -72,5 +72,5 @@ public class UserResource {
 		return ResponseEntity.ok(users);
 	}
 	
-	
+	// listar todos empréstimos de um usuário?
 }

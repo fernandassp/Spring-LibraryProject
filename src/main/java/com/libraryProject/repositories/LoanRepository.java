@@ -21,4 +21,6 @@ public interface LoanRepository extends JpaRepository<Loan, Long> {
 	@Query("UPDATE loans l SET l.status = :status WHERE l.id = :id")
 	public int updateStatus(@Param("id") Long id, @Param("status") LoanStatus status);
 	*/
+	
+	public List<Loan> findAllByBookId(Long id);
 }

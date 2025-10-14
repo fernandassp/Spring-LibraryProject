@@ -128,6 +128,11 @@ public class LoanService {
 		return loanRepository.findAllByUserId(id);
 	}
 
+	
+	public List<Loan> listAllByBookId(Long id) {
+		return loanRepository.findAllByBookId(id);
+	}
+	
 	public List<Loan> listAllByStatus(LoanStatus status) {
 		return loanRepository.findAllByStatus(status);
 	}
