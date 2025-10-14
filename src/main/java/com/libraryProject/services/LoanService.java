@@ -117,7 +117,7 @@ public class LoanService {
 	*/
 
 	public Loan getById(Long id) {
-		return loanRepository.findById(id).get(); // botar AQUI a validação de not found ?
+		return loanRepository.findById(id).get(); // botar AQUI a validação de not found 
 	}
 
 	public List<Loan> listAll() {
