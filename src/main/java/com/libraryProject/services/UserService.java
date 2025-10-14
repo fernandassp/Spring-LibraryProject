@@ -16,11 +16,6 @@ public class UserService {
 
 	@Autowired UserRepository userRepository;
 	
-	/*
-	 Cadastrar usuário com hash de senha
-	 save - update - get - list - login 
-	 */
-	
 	public User save(User user) {
 		
 		String hash = HashUtil.getSecureHash(user.getPassword());
