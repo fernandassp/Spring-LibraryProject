@@ -50,7 +50,7 @@ public class LoanService {
 		User user = userService.getById(userId);
 		Book book = bookService.getById(bookId);
 
-		// validações
+		// validações: se livro está disponível || usuario existe || livro existe
 
 
 		Loan loan = new Loan();
@@ -67,7 +67,29 @@ public class LoanService {
 
 		return savedLoan;
 	}
+	
+	public Loan approveLoan(Long loanId) {
+		
+		// validações: apenas LIBRARIAN/ADMIN (user role) || loan tem que ser requested
+		
+		Loan loan = getById(loanId); // validar se achou
+		
+		loan.setStatus(LoanStatus.APPROVED);
+		Loan updatedLoan = loanRepository.save(loan);
+		 
+		createNewLoanHistory(updatedLoan, LoanStatus.APPROVED, "Empréstimo aprovado pela biblioteca");
+		return updatedLoan;
+	}
 
+	private void createNewLoanHistory(Loan loan, LoanStatus status, String description) {
+		LoanHistory history = new LoanHistory();
+	    history.setRealDate(LocalDateTime.now());
+	    history.setStatus(status);
+	    history.setDescription(description);
+	    history.setLoan(loan);
+	    loanHistoryRepository.save(history);
+	}
+	
 	private void createInitialLoanHistory(Loan loan) {
 		String description = String.format("Solicitação de empréstimo do livro %s para usuário %s",
 				loan.getBook().getTitle(), loan.getUser().getName());
@@ -83,13 +105,15 @@ public class LoanService {
 	public Loan update(Loan loan) {
 		return loanRepository.save(loan);
 	}
-
+	
+	/*
 	public int updateStatus(Loan loan) {
 		return loanRepository.updateStatus(loan.getId(), loan.getStatus()); // setar primeiro
 	}
+	*/
 
 	public Loan getById(Long id) {
-		return loanRepository.findById(id).get();
+		return loanRepository.findById(id).get(); // botar AQUI a validação de not found ?
 	}
 
 	public List<Loan> listAll() {
