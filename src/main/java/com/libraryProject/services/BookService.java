@@ -2,13 +2,10 @@ package com.libraryProject.services;
 
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 import com.libraryProject.domain.Book;
 import com.libraryProject.exception.NotFoundException;
 import com.libraryProject.model.PageModel;
@@ -42,7 +39,7 @@ public class BookService {
 	}
 	
 	public PageModel<Book> listAllOnLazyMode(PageRequestModel pr){
-		Pageable pageable = PageRequest.of(pr.getPage(), pr.getSize());
+		Pageable pageable = pr.toSpringPageRequest();
 		Page<Book> page =bookRepository.findAll(pageable);
 		PageModel<Book> pm = new PageModel<>((int)page.getTotalElements(), page.getSize(), page.getTotalPages(), page.getContent());
 		return pm;

@@ -2,6 +2,8 @@ package com.libraryProject.model;
 
 import java.util.Map;
 
+import org.springframework.data.domain.PageRequest;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,5 +24,11 @@ public class PageRequestModel {
 		if (params.containsKey("size")) {
 			size = Integer.parseInt(params.get("size"));
 		}
+	}
+	
+	
+	public PageRequest toSpringPageRequest() {  // a lógica de criação do pageable fica aqui: pode colocar novos parametros
+		// depois, sem precisar alterar em vários lugares
+		return PageRequest.of(page, size);
 	}
 }

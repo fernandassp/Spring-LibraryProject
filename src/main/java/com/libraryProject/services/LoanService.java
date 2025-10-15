@@ -3,13 +3,10 @@ package com.libraryProject.services;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 import com.libraryProject.domain.Book;
 import com.libraryProject.domain.Loan;
 import com.libraryProject.domain.LoanHistory;
@@ -145,7 +142,7 @@ public class LoanService {
 	}
 	
 	public PageModel<Loan> listAllOnLazyMode(PageRequestModel pr){
-		Pageable pageable = PageRequest.of(pr.getPage(), pr.getSize());
+		Pageable pageable = pr.toSpringPageRequest();
 		Page<Loan> page = loanRepository.findAll(pageable);
 		PageModel<Loan> pm = new PageModel<Loan>((int)page.getTotalElements(), page.getSize(), page.getTotalPages(), page.getContent());
 		return pm;

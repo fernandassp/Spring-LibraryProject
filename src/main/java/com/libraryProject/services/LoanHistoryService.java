@@ -42,7 +42,7 @@ public class LoanHistoryService {
 	}
 	
 	public PageModel<LoanHistory> listAllByLoanIdOnLazyMode(Long loanId, PageRequestModel pr){
-		Pageable pageable = PageRequest.of(pr.getPage(), pr.getSize());
+		Pageable pageable = pr.toSpringPageRequest();
 		Page<LoanHistory> page = loanHistoryRepository.findAllByLoanId(loanId, pageable);
 		PageModel<LoanHistory> pm = new PageModel<>((int)page.getTotalElements(), page.getSize(), page.getTotalPages(), page.getContent());
 		return pm;
