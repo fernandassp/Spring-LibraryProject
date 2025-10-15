@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.libraryProject.domain.Book;
@@ -14,6 +17,8 @@ import com.libraryProject.domain.User;
 import com.libraryProject.domain.enums.LoanStatus;
 import com.libraryProject.exception.NotFoundException;
 import com.libraryProject.exception.UnavailableBookException;
+import com.libraryProject.model.PageModel;
+import com.libraryProject.model.PageRequestModel;
 import com.libraryProject.repositories.LoanHistoryRepository;
 import com.libraryProject.repositories.LoanRepository;
 
@@ -137,6 +142,13 @@ public class LoanService {
 
 	public List<Loan> listAll() {
 		return loanRepository.findAll();
+	}
+	
+	public PageModel<Loan> listAllOnLazyMode(PageRequestModel pr){
+		Pageable pageable = PageRequest.of(pr.getPage(), pr.getSize());
+		Page<Loan> page = loanRepository.findAll(pageable);
+		PageModel<Loan> pm = new PageModel<Loan>((int)page.getTotalElements(), page.getSize(), page.getTotalPages(), page.getContent());
+		return pm;
 	}
 
 	public List<Loan> listAllByUserId(Long id) {
