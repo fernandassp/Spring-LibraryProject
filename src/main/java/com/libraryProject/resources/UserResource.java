@@ -12,12 +12,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.libraryProject.domain.User;
 import com.libraryProject.domain.enums.UserRole;
 import com.libraryProject.dto.UserLogindto;
 import com.libraryProject.dto.UserUpdateRoledto;
+import com.libraryProject.model.PageModel;
+import com.libraryProject.model.PageRequestModel;
 import com.libraryProject.services.UserService;
 
 @RestController
@@ -47,9 +50,12 @@ public class UserResource {
 	} 
 	
 	@GetMapping
-	public ResponseEntity<List<User>> listAll(){
-		List<User> users = userService.listAll();
-		return ResponseEntity.ok(users);
+	public ResponseEntity<PageModel<User>> listAll(
+			@RequestParam(value="page") int page, 
+			@RequestParam(value="size") int size) {
+		PageRequestModel pr = new PageRequestModel(page, size);
+		PageModel<User> pm = userService.listAllOnLazyMode(pr);
+		return ResponseEntity.ok(pm);
 	}
 	
 	@PostMapping("/login")
