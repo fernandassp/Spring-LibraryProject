@@ -47,8 +47,8 @@ public class BookResource {
 	}
 	
 	@GetMapping
-	public ResponseEntity<PageModel<Book>> listAll(@RequestParam(value="page") int page,
-			@RequestParam(value="size") int size){
+	public ResponseEntity<PageModel<Book>> listAll(@RequestParam(value="page", defaultValue = "0") int page,
+			@RequestParam(value="size", defaultValue = "10") int size){
 		PageRequestModel pr = new PageRequestModel(page, size);
 		PageModel<Book> pm = bookService.listAllOnLazyMode(pr);
 		return ResponseEntity.ok(pm);

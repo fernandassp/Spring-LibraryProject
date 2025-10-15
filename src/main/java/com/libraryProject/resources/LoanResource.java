@@ -71,7 +71,8 @@ public class LoanResource {
 	}
 	
 	@GetMapping
-	public ResponseEntity<PageModel<Loan>> listAll(@RequestParam(value="page") int page, @RequestParam(value="size") int size){
+	public ResponseEntity<PageModel<Loan>> listAll(@RequestParam(value="page", defaultValue = "0") int page, 
+			@RequestParam(value="size", defaultValue = "10") int size){
 		PageRequestModel pr = new PageRequestModel(page, size);
 		PageModel<Loan> pm = loanService.listAllOnLazyMode(pr);
 		return ResponseEntity.ok(pm);

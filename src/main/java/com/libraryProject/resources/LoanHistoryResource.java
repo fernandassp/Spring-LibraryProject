@@ -21,7 +21,7 @@ public class LoanHistoryResource {
 	
 	@GetMapping("/loan/{loanId}")
 	public ResponseEntity<PageModel<LoanHistory>> listAllByLoanId(@PathVariable(name = "loanId") Long loanId, 
-			@RequestParam(value="page") int page, @RequestParam(value="size") int size){
+			@RequestParam(value="page", defaultValue = "0") int page, @RequestParam(value="size", defaultValue = "10") int size){
 		PageRequestModel pr = new PageRequestModel(page, size);
 		PageModel<LoanHistory> pm = loanHistoryService.listAllByLoanIdOnLazyMode(loanId, pr);
 		return ResponseEntity.ok(pm);
