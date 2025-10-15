@@ -12,9 +12,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.libraryProject.domain.Book;
+import com.libraryProject.model.PageModel;
+import com.libraryProject.model.PageRequestModel;
 import com.libraryProject.services.BookService;
 
 @RestController
@@ -44,9 +47,11 @@ public class BookResource {
 	}
 	
 	@GetMapping
-	public ResponseEntity<List<Book>> listAll(){
-		List<Book> books = bookService.listAll();
-		return ResponseEntity.ok(books);
+	public ResponseEntity<PageModel<Book>> listAll(@RequestParam(value="page") int page,
+			@RequestParam(value="size") int size){
+		PageRequestModel pr = new PageRequestModel(page, size);
+		PageModel<Book> pm = bookService.listAllOnLazyMode(pr);
+		return ResponseEntity.ok(pm);
 	}
 	
 	
