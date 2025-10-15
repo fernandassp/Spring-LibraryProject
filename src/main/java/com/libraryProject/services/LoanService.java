@@ -2,6 +2,7 @@ package com.libraryProject.services;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,8 @@ import com.libraryProject.domain.Loan;
 import com.libraryProject.domain.LoanHistory;
 import com.libraryProject.domain.User;
 import com.libraryProject.domain.enums.LoanStatus;
+import com.libraryProject.exception.NotFoundException;
+import com.libraryProject.exception.UnavailableBookException;
 import com.libraryProject.repositories.LoanHistoryRepository;
 import com.libraryProject.repositories.LoanRepository;
 
@@ -24,12 +27,14 @@ public class LoanService {
 
 	public Loan requestLoan(Long userId, Long bookId) {
 
+		// não pode fazer request de vários loans iguais (mesmo user e mesmo book, se já existir um loan assim diferente de returned)
 		User user = userService.getById(userId);
 		Book book = bookService.getById(bookId);
-
-		// validações: se livro está disponível || usuario existe || livro existe
-
-
+		
+		if(!book.getAvailable()) {
+			throw new UnavailableBookException(String.format("O livro %s não está disponível.", book.getTitle()));
+		}
+		
 		Loan loan = new Loan();
 		loan.setUser(user);
 		loan.setBook(book);
@@ -44,9 +49,12 @@ public class LoanService {
 	
 	public Loan approveLoan(Long loanId) {
 		
-		// validações: apenas LIBRARIAN/ADMIN (user role) || loan tem que ser requested
+		// validações: apenas LIBRARIAN/ADMIN (user role) ?
 		
 		Loan loan = getById(loanId);
+		if(loan.getStatus() != LoanStatus.REQUESTED) {
+			throw new RuntimeException("O empréstimo deve estar no estado 'requerido' para poder ser aprovado.");
+		}
 		
 		loan.setStatus(LoanStatus.APPROVED);
 		Loan updatedLoan = update(loan);
@@ -59,8 +67,12 @@ public class LoanService {
 	}
 	
 	public Loan registerWithdrawal(Long loanId) { // retirada do livro
-		// validações: apenas LIBRARIAN/ADMIN (user role) || loan tem que ser approved
+		// validações: apenas LIBRARIAN/ADMIN (user role) ? 
 		Loan loan = getById(loanId);
+		
+		if(loan.getStatus() != LoanStatus.APPROVED) {
+			throw new RuntimeException("O empréstimo deve estar no estado 'aprovado' para poder ser marcado como 'retirado'.");
+		}
 		
 		loan.setStatus(LoanStatus.IN_PROGRESS);
 		Loan updatedLoan = update(loan);
@@ -70,8 +82,12 @@ public class LoanService {
 	}
 	
 	public Loan registerBookReturn(Long loanId) {
-		// validações: apenas LIBRARIAN/ADMIN (user role) || loan tem que ser in progress
+		// validações: apenas LIBRARIAN/ADMIN (user role) ?
 		Loan loan = getById(loanId);
+		if(loan.getStatus() != LoanStatus.IN_PROGRESS) {
+			throw new RuntimeException("O empréstimo deve estar no estado 'em progresso' para poder ser marcado como 'devolvido'.");
+		}
+		
 		loan.setStatus(LoanStatus.RETURNED);
 		Loan updatedLoan = update(loan);
 		
@@ -115,7 +131,8 @@ public class LoanService {
 	*/
 
 	public Loan getById(Long id) {
-		return loanRepository.findById(id).get(); // botar AQUI a validação de not found 
+		Optional<Loan> result = loanRepository.findById(id);
+		return result.orElseThrow( () -> new NotFoundException("Não existe empréstimo com id = " + id) );
 	}
 
 	public List<Loan> listAll() {

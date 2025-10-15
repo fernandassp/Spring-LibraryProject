@@ -1,11 +1,13 @@
 package com.libraryProject.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.libraryProject.domain.Book;
+import com.libraryProject.exception.NotFoundException;
 import com.libraryProject.repositories.BookRepository;
 
 @Service
@@ -25,7 +27,9 @@ public class BookService {
 	}
 	
 	public Book getById(Long id) {
-		return bookRepository.findById(id).get();
+		Optional<Book> result = bookRepository.findById(id);
+		return result.orElseThrow( () -> new NotFoundException("Não existe livro com id = " + id) );
+				
 	}
 	
 	public List<Book> listAll(){
@@ -48,7 +52,8 @@ public class BookService {
 	}
 	
 	public Book getByTitle(String title) {
-		return bookRepository.findByTitle(title).get();
+		Optional<Book> result = bookRepository.findByTitle(title);
+		return result.orElseThrow(() -> new NotFoundException("Não foi encontrado livro com o título = " + title));
 	}
 	
 	public List<Book> getByAvailable(Boolean available){

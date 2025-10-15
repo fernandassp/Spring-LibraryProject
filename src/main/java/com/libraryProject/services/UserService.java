@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.libraryProject.domain.User;
 import com.libraryProject.domain.enums.UserRole;
+import com.libraryProject.exception.NotFoundException;
 import com.libraryProject.repositories.UserRepository;
 import com.spring_course1.service.util.HashUtil;
 
@@ -36,7 +37,7 @@ public class UserService {
 	
 	public User getById(Long id) {
 		Optional<User> result = userRepository.findById(id);
-		return result.get();
+		return result.orElseThrow( () -> new NotFoundException("Não existe usuário com id = " + id) );
 	}
 	
 	public List<User> listAll(){
@@ -49,11 +50,12 @@ public class UserService {
 		password = HashUtil.getSecureHash(password);
 		
 		Optional<User> result = userRepository.login(email, password);
-		return result.get(); 
+		return result.orElseThrow(() -> new NotFoundException("E-mail ou senha incorretos."));
 	}
 	
     public User findByEmail(String email) {
-        return userRepository.findByEmail(email).get();
+    	Optional<User> result = userRepository.findByEmail(email);
+        return result.orElseThrow(() -> new NotFoundException("Não existe usuário com e-mail = " + email));
     }
     
     public List<User> findByRole(UserRole role) {

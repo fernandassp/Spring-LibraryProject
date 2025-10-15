@@ -1,11 +1,11 @@
 package com.libraryProject.services;
 
 import java.util.List;
-
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.libraryProject.domain.LoanHistory;
+import com.libraryProject.exception.NotFoundException;
 import com.libraryProject.repositories.LoanHistoryRepository;
 
 @Service
@@ -26,7 +26,8 @@ public class LoanHistoryService {
 	}
 	
 	public LoanHistory getById(Long id) {
-		return loanHistoryRepository.findById(id).get();
+		Optional<LoanHistory> result = loanHistoryRepository.findById(id);
+		return result.orElseThrow( () -> new NotFoundException("Não existe histórico de empréstimo com id = " + id) );
 	}
 	
 	public List<LoanHistory> listAllByLoanId(Long loanId){   // útil
