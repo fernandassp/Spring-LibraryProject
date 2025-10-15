@@ -20,7 +20,7 @@ import com.libraryProject.services.LoanService;
 @RestController
 @RequestMapping(value = "loans")
 public class LoanResource {
-
+	
 	@Autowired LoanService loanService;
 
 	@PostMapping
