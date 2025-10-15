@@ -17,6 +17,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import com.libraryProject.exception.AuthenticationFailedException;
 import com.libraryProject.exception.NotFoundException;
 import com.libraryProject.exception.UnavailableBookException;
+import com.libraryProject.exception.UserRegisterException;
 
 @ControllerAdvice
 public class ResourceExceptionHandler extends ResponseEntityExceptionHandler {
@@ -57,6 +58,13 @@ public class ResourceExceptionHandler extends ResponseEntityExceptionHandler {
 				"Invalid field(s)", LocalDateTime.now(), errors); // mensagem: default message
 		
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST.value()).body(error);
+	}
+	
+	@ExceptionHandler(UserRegisterException.class)
+	public ResponseEntity<ApiError> handleUserRegisterException(UserRegisterException ex){
+		
+		ApiError error = new ApiError(HttpStatus.CONFLICT.value(), ex.getMessage(), LocalDateTime.now());
+		return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
 	}
 	
 }

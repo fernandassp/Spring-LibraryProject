@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.libraryProject.domain.User;
 import com.libraryProject.domain.enums.UserRole;
 import com.libraryProject.exception.NotFoundException;
+import com.libraryProject.exception.UserRegisterException;
 import com.libraryProject.model.PageModel;
 import com.libraryProject.model.PageRequestModel;
 import com.libraryProject.repositories.UserRepository;
@@ -23,6 +24,10 @@ public class UserService {
 	@Autowired UserRepository userRepository;
 	
 	public User save(User user) {
+		
+		if(userRepository.existsByEmail(user.getEmail())) {
+			throw new UserRegisterException("This email was already registered.");
+		}
 		
 		String hash = HashUtil.getSecureHash(user.getPassword());
 		user.setPassword(hash);
