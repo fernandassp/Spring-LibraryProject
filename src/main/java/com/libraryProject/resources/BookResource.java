@@ -38,12 +38,11 @@ public class BookResource {
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<Book> update(@PathVariable(name = "id") Long id, @RequestBody @Valid BookUpdatedto bookdto){
-		Book book = bookdto.transformToBook();
-		book.setId(id);
+		Book book = bookService.getById(id);
+		bookdto.transformToBook(book);
 		Book updatedBook = bookService.update(book);
 		return ResponseEntity.ok(updatedBook);
 	}
-	// ****** obs.: o metodo update exige que informe o available no body; dá para mudar isso? (dto?) **********
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<Book> getById(@PathVariable(name="id") Long id){

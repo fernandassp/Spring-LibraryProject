@@ -48,7 +48,7 @@ public class BookService {
 		return pm;
 	}
 	
-	public Book updateAvailability(Long bookId, Boolean available) {
+	public Book updateAvailability(Long bookId, Boolean available) {  // não pode ser chamado sem ser no approve ou return loan
 	    // busca o livro existente para preservar outros dados
 	    Book book = getById(bookId);
 	    book.setAvailable(available);
