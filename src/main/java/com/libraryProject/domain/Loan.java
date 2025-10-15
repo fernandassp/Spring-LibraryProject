@@ -5,8 +5,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.libraryProject.domain.enums.LoanStatus;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -37,9 +39,11 @@ public class Loan implements Serializable {
 	private Long id;
 
 	@Column(nullable = false, updatable = false)
-	private LocalDateTime loanDate; // se der algum problema, mudo para date
+	@JsonFormat(pattern = "dd/MM/yyyy HH:mm")
+	private LocalDateTime loanDate; 
 
 	@Column(nullable = false, updatable = false)
+	@JsonFormat(pattern = "dd/MM/yyyy HH:mm")
 	private LocalDateTime returnDate;
 
 	@Column(nullable = false)

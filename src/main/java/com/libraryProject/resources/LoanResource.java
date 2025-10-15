@@ -1,6 +1,7 @@
 package com.libraryProject.resources;
 
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,12 +14,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.libraryProject.domain.Loan;
 import com.libraryProject.domain.enums.LoanStatus;
 import com.libraryProject.dto.LoanRequestdto;
+import com.libraryProject.dto.LoanUpdatedto;
 import com.libraryProject.model.PageModel;
 import com.libraryProject.model.PageRequestModel;
 import com.libraryProject.services.LoanService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping(value = "loans")
@@ -58,8 +63,9 @@ public class LoanResource {
 	
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<Loan> update(@PathVariable(name="id") Long id, @RequestBody Loan loan){
-		loan.setId(id);
+	public ResponseEntity<Loan> update(@PathVariable(name="id") Long id, @RequestBody @Valid LoanUpdatedto loandto){
+		Loan loan = loanService.getById(id);
+		loandto.transformToLoan(loan);
 		Loan updated = loanService.update(loan);
 		return ResponseEntity.ok(updated);
 	}
