@@ -2,10 +2,17 @@ package com.libraryProject.services;
 
 import java.util.List;
 import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
 import com.libraryProject.domain.LoanHistory;
 import com.libraryProject.exception.NotFoundException;
+import com.libraryProject.model.PageModel;
+import com.libraryProject.model.PageRequestModel;
 import com.libraryProject.repositories.LoanHistoryRepository;
 
 @Service
@@ -32,6 +39,13 @@ public class LoanHistoryService {
 	
 	public List<LoanHistory> listAllByLoanId(Long loanId){   // útil
 		return loanHistoryRepository.findAllByLoanId(loanId);
+	}
+	
+	public PageModel<LoanHistory> listAllByLoanIdOnLazyMode(Long loanId, PageRequestModel pr){
+		Pageable pageable = PageRequest.of(pr.getPage(), pr.getSize());
+		Page<LoanHistory> page = loanHistoryRepository.findAllByLoanId(loanId, pageable);
+		PageModel<LoanHistory> pm = new PageModel<>((int)page.getTotalElements(), page.getSize(), page.getTotalPages(), page.getContent());
+		return pm;
 	}
 }
 
