@@ -1,8 +1,12 @@
 package com.libraryProject.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,6 +20,7 @@ public class PageRequestModel {
 
 	private int page = 0;
 	private int size = 10;
+	private String sort = "";  // só para inicializar
 
 	public PageRequestModel(Map<String, String> params) {
 		if (params.containsKey("page")) {
@@ -24,11 +29,35 @@ public class PageRequestModel {
 		if (params.containsKey("size")) {
 			size = Integer.parseInt(params.get("size"));
 		}
+		if(params.containsKey("sort")) sort = params.get("sort");
 	}
 	
 	
 	public PageRequest toSpringPageRequest() {  // a lógica de criação do pageable fica aqui: pode colocar novos parametros
 		// depois, sem precisar alterar em vários lugares
-		return PageRequest.of(page, size);
+		
+		List<Order> orders = new ArrayList<>();
+		
+		String[] properties = sort.split(",");
+		
+		for(String prop : properties) {
+			
+			if(prop.trim().length() > 0) { // verificar conteúdo
+				
+				String column = prop.trim();
+				
+				if(column.startsWith("-")) {
+					column = column.replace("-", "").trim();
+					
+					orders.add(Order.desc(column));
+				}
+				else {
+					orders.add(Order.asc(column));
+				}
+			}
+		}
+		
+		return PageRequest.of(page, size, Sort.by(orders));
 	}
 }
+
