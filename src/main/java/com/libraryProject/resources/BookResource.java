@@ -16,9 +16,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.libraryProject.domain.Book;
+import com.libraryProject.dto.BookSavedto;
+import com.libraryProject.dto.BookUpdatedto;
 import com.libraryProject.model.PageModel;
 import com.libraryProject.model.PageRequestModel;
 import com.libraryProject.services.BookService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping(value = "books")
@@ -27,13 +31,14 @@ public class BookResource {
 	@Autowired BookService bookService;
 	
 	@PostMapping
-	public ResponseEntity<Book> save(@RequestBody Book book){
-		Book createdBook = bookService.save(book);
+	public ResponseEntity<Book> save(@RequestBody @Valid BookSavedto bookdto){
+		Book createdBook = bookService.save(bookdto.transformToBook());
 		return ResponseEntity.status(HttpStatus.CREATED).body(createdBook);
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<Book> update(@PathVariable(name = "id") Long id, @RequestBody Book book){
+	public ResponseEntity<Book> update(@PathVariable(name = "id") Long id, @RequestBody @Valid BookUpdatedto bookdto){
+		Book book = bookdto.transformToBook();
 		book.setId(id);
 		Book updatedBook = bookService.update(book);
 		return ResponseEntity.ok(updatedBook);
