@@ -48,7 +48,7 @@ public class User implements Serializable{
 	@Setter(onMethod = @__({@JsonProperty}))
 	private String password;
 	
-	@Column(nullable = false)
+	@Column(nullable = false, updatable = false)
 	@Enumerated(EnumType.STRING)
 	private UserRole role;
 	
