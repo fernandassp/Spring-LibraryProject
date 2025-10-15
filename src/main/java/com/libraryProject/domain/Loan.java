@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.libraryProject.domain.enums.LoanStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -46,8 +48,7 @@ public class Loan implements Serializable {
 
 	// um user tem vários loans
 	@ManyToOne(optional = false)
-	@JoinColumn(name = "user_id") // na tabela Loan, o User é FK - user_id: nome da FK. JPA pega a PK da tabela
-									// users
+	@JoinColumn(name = "user_id") // na tabela Loan, o User é FK - user_id: nome da FK. JPA pega a PK da tabela users
 	private User user;
 
 	// um book já teve vários loans
@@ -57,6 +58,7 @@ public class Loan implements Serializable {
 
 	// um empréstimo tem uma lista de históricos / estágios do loan
 	@OneToMany(mappedBy = "loan")
+	@Getter(onMethod = @__({@JsonIgnore}))
 	private List<LoanHistory> history = new ArrayList<>();
 
 	public Loan(Long id, LocalDateTime loanDate, LocalDateTime returnDate, LoanStatus status, User user, Book book) {
@@ -66,7 +68,6 @@ public class Loan implements Serializable {
 		this.status = status;
 		this.user = user;
 		this.book = book;
-		// this.history = (history != null) ? history : new ArrayList<>(); // não dar erro para adicionar novo historyItem
 	}
 
 	public void addHistory(LoanHistory historyItem) {

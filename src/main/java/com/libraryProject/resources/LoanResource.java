@@ -29,7 +29,9 @@ public class LoanResource {
 		Loan createdLoan = loanService.requestLoan(loan.getUserId(), loan.getBookId());
 		return ResponseEntity.status(HttpStatus.CREATED).body(createdLoan);
 	}
-
+   
+	// ***** OBS.: não permitir vários requests do mesmo empréstimo
+	
 	@PatchMapping("/approve/{id}")
 	public ResponseEntity<Loan> approve(@PathVariable(name="id") Long id)
 	{
@@ -50,6 +52,7 @@ public class LoanResource {
 		Loan loan  = loanService.registerBookReturn(id);
 		return ResponseEntity.ok(loan);
 	}
+	
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<Loan> update(@PathVariable(name="id") Long id, @RequestBody Loan loan){
@@ -87,6 +90,7 @@ public class LoanResource {
         List<Loan> loans = loanService.listAllByBookId(bookId);
         return ResponseEntity.ok(loans);
     }
+    
 
 }
 	

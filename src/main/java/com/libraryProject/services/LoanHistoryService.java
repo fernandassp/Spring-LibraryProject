@@ -9,7 +9,7 @@ import com.libraryProject.domain.LoanHistory;
 import com.libraryProject.repositories.LoanHistoryRepository;
 
 @Service
-public class LoanHistoryService {  // por enquanto, não parece ser útil
+public class LoanHistoryService {  
 
 	@Autowired LoanHistoryRepository loanHistoryRepository;
 
@@ -29,7 +29,7 @@ public class LoanHistoryService {  // por enquanto, não parece ser útil
 		return loanHistoryRepository.findById(id).get();
 	}
 	
-	public List<LoanHistory> listAllByLoanId(Long loanId){
+	public List<LoanHistory> listAllByLoanId(Long loanId){   // útil
 		return loanHistoryRepository.findAllByLoanId(loanId);
 	}
 }

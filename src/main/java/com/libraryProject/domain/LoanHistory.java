@@ -2,7 +2,10 @@ package com.libraryProject.domain;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import jakarta.persistence.Id; 
+
+import jakarta.persistence.Id;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.libraryProject.domain.enums.LoanStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -43,5 +46,6 @@ public class LoanHistory implements Serializable{
 	
 	@ManyToOne(optional = false)
 	@JoinColumn(name = "loan_id")
+	@Getter(onMethod = @__({@JsonIgnore}))
 	private Loan loan;
 }
