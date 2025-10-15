@@ -1,6 +1,7 @@
 package com.libraryProject.resources;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -77,12 +78,14 @@ public class LoanResource {
 	}
 	
 	@GetMapping
-	public ResponseEntity<PageModel<Loan>> listAll(@RequestParam(value="page", defaultValue = "0") int page, 
-			@RequestParam(value="size", defaultValue = "10") int size){
-		PageRequestModel pr = new PageRequestModel(page, size);
+	public ResponseEntity<PageModel<Loan>> listAll(@RequestParam Map<String, String> params){
+		PageRequestModel pr = new PageRequestModel(params);
 		PageModel<Loan> pm = loanService.listAllOnLazyMode(pr);
 		return ResponseEntity.ok(pm);
 	}
+	
+	
+	// fazer os outros "lazy modes" - loan, loan History, book; pesquisar diferença entre isso e FetchType.LAZY
 	
 	@GetMapping("/status/{status}")
 	public ResponseEntity<List<Loan>> listAllByStatus(@PathVariable(name="status") LoanStatus status){

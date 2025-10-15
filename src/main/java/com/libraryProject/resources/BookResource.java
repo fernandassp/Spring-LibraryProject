@@ -1,6 +1,7 @@
 package com.libraryProject.resources;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -51,9 +52,8 @@ public class BookResource {
 	}
 	
 	@GetMapping
-	public ResponseEntity<PageModel<Book>> listAll(@RequestParam(value="page", defaultValue = "0") int page,
-			@RequestParam(value="size", defaultValue = "10") int size){
-		PageRequestModel pr = new PageRequestModel(page, size);
+	public ResponseEntity<PageModel<Book>> listAll(@RequestParam Map<String, String> params){
+		PageRequestModel pr = new PageRequestModel(params);
 		PageModel<Book> pm = bookService.listAllOnLazyMode(pr);
 		return ResponseEntity.ok(pm);
 	}

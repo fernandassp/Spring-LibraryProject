@@ -1,5 +1,7 @@
 package com.libraryProject.resources;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,8 +23,8 @@ public class LoanHistoryResource {
 	
 	@GetMapping("/loan/{loanId}")
 	public ResponseEntity<PageModel<LoanHistory>> listAllByLoanId(@PathVariable(name = "loanId") Long loanId, 
-			@RequestParam(value="page", defaultValue = "0") int page, @RequestParam(value="size", defaultValue = "10") int size){
-		PageRequestModel pr = new PageRequestModel(page, size);
+			@RequestParam Map<String, String> params){
+		PageRequestModel pr = new PageRequestModel(params);
 		PageModel<LoanHistory> pm = loanHistoryService.listAllByLoanIdOnLazyMode(loanId, pr);
 		return ResponseEntity.ok(pm);
 	}
