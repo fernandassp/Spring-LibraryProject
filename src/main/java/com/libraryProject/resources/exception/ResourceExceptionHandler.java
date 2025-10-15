@@ -29,6 +29,7 @@ public class ResourceExceptionHandler {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
 	}
 	
+	@ExceptionHandler(UnavailableBookException.class)
 	public ResponseEntity<ApiError> handleUnavailableBookException(UnavailableBookException ex){
 		ApiError error = new ApiError(HttpStatus.BAD_REQUEST.value(), ex.getMessage(), LocalDateTime.now());
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);

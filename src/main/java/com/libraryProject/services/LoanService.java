@@ -26,13 +26,13 @@ public class LoanService {
 	@Autowired UserService userService;
 
 	public Loan requestLoan(Long userId, Long bookId) {
-
+		// runtimeexceptions: depois criar classe personalizada
 		// não pode fazer request de vários loans iguais (mesmo user e mesmo book, se já existir um loan assim diferente de returned)
 		User user = userService.getById(userId);
 		Book book = bookService.getById(bookId);
 		
 		if(!book.getAvailable()) {
-			throw new UnavailableBookException(String.format("O livro %s não está disponível.", book.getTitle()));
+			throw new UnavailableBookException(String.format("O livro %s não está disponível para empréstimo.", book.getTitle()));
 		}
 		
 		Loan loan = new Loan();

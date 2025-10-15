@@ -35,7 +35,7 @@ public class BookResource {
 		Book updatedBook = bookService.update(book);
 		return ResponseEntity.ok(updatedBook);
 	}
-	// ****** obs.: o metodo update exige que informe o available no body; dá para mudar isso? **********
+	// ****** obs.: o metodo update exige que informe o available no body; dá para mudar isso? (dto?) **********
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<Book> getById(@PathVariable(name="id") Long id){
