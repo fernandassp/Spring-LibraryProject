@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import com.libraryProject.domain.User;
 import com.libraryProject.domain.enums.UserRole;
@@ -13,7 +14,8 @@ import com.libraryProject.exception.UserRegisterException;
 import com.libraryProject.model.PageModel;
 import com.libraryProject.model.PageRequestModel;
 import com.libraryProject.repositories.UserRepository;
-import com.spring_course1.service.util.HashUtil;
+import com.libraryProject.services.util.HashUtil;
+import com.libraryProject.specification.UserSpecification;
 
 @Service
 public class UserService {
@@ -54,7 +56,9 @@ public class UserService {
 	
 	public PageModel<User> listAllOnLazyMode(PageRequestModel pr){
 		Pageable pageable = pr.toSpringPageRequest(); // montar pageable
-		Page<User> page = userRepository.findAll(pageable); // recebe um pageable
+		
+		Specification<User> spec = UserSpecification.search(pr.getSearch()); // comunicação service e specification
+		Page<User> page = userRepository.findAll(spec, pageable); // recebe um pageable (add spec)
 		
 		PageModel<User> pm = new PageModel<>((int)page.getTotalElements(), page.getSize(), page.getTotalPages(), page.getContent());
 		return pm;
