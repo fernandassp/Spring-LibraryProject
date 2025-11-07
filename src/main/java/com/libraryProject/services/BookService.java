@@ -2,15 +2,19 @@ package com.libraryProject.services;
 
 import java.util.List;
 import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
 import com.libraryProject.domain.Book;
 import com.libraryProject.exception.NotFoundException;
 import com.libraryProject.model.PageModel;
 import com.libraryProject.model.PageRequestModel;
 import com.libraryProject.repositories.BookRepository;
+import com.libraryProject.specification.BookSpecification;
 
 @Service
 public class BookService {
@@ -40,7 +44,10 @@ public class BookService {
 	
 	public PageModel<Book> listAllOnLazyMode(PageRequestModel pr){
 		Pageable pageable = pr.toSpringPageRequest();
-		Page<Book> page =bookRepository.findAll(pageable);
+		
+		Specification<Book> spec = BookSpecification.search(pr.getSearch()); // comunicação service e specification
+		Page<Book> page = bookRepository.findAll(spec, pageable); // recebe um pageable (add spec)
+		
 		PageModel<Book> pm = new PageModel<>((int)page.getTotalElements(), page.getSize(), page.getTotalPages(), page.getContent());
 		return pm;
 	}
